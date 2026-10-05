@@ -1,5 +1,6 @@
 #include "svg_utils.h"
 #include <stdio.h>
+#include <string.h>
 
 char*
 txt_align_to_char(txtAlign a)
@@ -41,7 +42,7 @@ svg_header(char*  buffer,
 void
 svg_footer(char* buffer)
 {
-    sprintf(buffer, "%s</svg>\n", buffer);
+    sprintf(buffer + strlen(buffer), "</svg>\n" );
 }
 
 void
@@ -52,12 +53,12 @@ clip_region(char*  buffer,
              double height,
              char*  id)
 {
-    sprintf(buffer, "%s<defs>"
+    sprintf(buffer + strlen(buffer), "<defs>"
             "<clipPath id=\"%s\">"
             "<rect x=\"%.2f\" y=\"%.2f\" width=\"%.2f\" height=\"%.2f\"/>\n"
             "</clipPath>"
             "</defs>",
-            buffer, id, x, y, width, height);
+            id, x, y, width, height);
 }
 
 void
@@ -88,16 +89,16 @@ rect_alpha(char*  buffer,
 {
     if (clip_id)
     {
-        sprintf(buffer, "%s<rect clip-path=\"url(#%s)\" ",
-                buffer, clip_id);
+        sprintf(buffer + strlen(buffer), "<rect clip-path=\"url(#%s)\" ",
+                clip_id);
     }else
     {
-        sprintf(buffer, "%s<rect ", buffer);
+        sprintf(buffer + strlen(buffer), "<rect " );
     }
-    sprintf(buffer,
-            "%s x=\"%.2f\" y=\"%.2f\" width=\"%.2f\" height=\"%.2f\" "
+    sprintf(buffer + strlen(buffer),
+            " x=\"%.2f\" y=\"%.2f\" width=\"%.2f\" height=\"%.2f\" "
             "style=\"fill:%s; fill-opacity:%.2f; stroke:%s; stroke-width:%.2f;\" />\n",
-            buffer, x, y, width, heigth, fill, fill_alpha, stroke, stroke_width);
+            x, y, width, heigth, fill, fill_alpha, stroke, stroke_width);
 }
 
 void
@@ -126,14 +127,14 @@ styled_line(char*  buffer,
 {
     if (clip_id)
     {
-       sprintf(buffer, "%s<line clip-path=\"url(#%s)\" ", buffer, clip_id);
+       sprintf(buffer + strlen(buffer), "<line clip-path=\"url(#%s)\" ", clip_id);
     } else
     {
-      sprintf(buffer, "%s<line ", buffer);
+      sprintf(buffer + strlen(buffer), "<line " );
     }
-    sprintf(buffer,
-            "%s x1=\"%.2f\" y1=\"%.2f\" x2=\"%.2f\" y2=\"%.2f\" %s style=\"stroke: %s;stroke-width:%.2f\"/>\n",
-                buffer, x1, y1, x2, y2, style, color, line_width);
+    sprintf(buffer + strlen(buffer),
+            " x1=\"%.2f\" y1=\"%.2f\" x2=\"%.2f\" y2=\"%.2f\" %s style=\"stroke: %s;stroke-width:%.2f\"/>\n",
+                x1, y1, x2, y2, style, color, line_width);
 }
 
 
@@ -149,20 +150,20 @@ poly_line(char*         buffer,
 {
     if (clip_id)
     {
-        sprintf(buffer, "%s<polyline clip-path=\"url(#%s)\"", buffer, clip_id);
+        sprintf(buffer + strlen(buffer), "<polyline clip-path=\"url(#%s)\"", clip_id);
     }else
     {
-        sprintf(buffer, "%s<polyline ", buffer);
+        sprintf(buffer + strlen(buffer), "<polyline " );
     }
-    sprintf(buffer, "%s style=\"fill:none; stroke:%s; stroke-width:%.2f;\" %s points=\"",
-                buffer, color, line_width, style);
+    sprintf(buffer + strlen(buffer), " style=\"fill:none; stroke:%s; stroke-width:%.2f;\" %s points=\"",
+                color, line_width, style);
 
     unsigned int i;
     for (i = 0;i < n; i++)
     {
-        sprintf(buffer, "%s%.2f,%.2f ", buffer, xs[i], ys[i]);
+        sprintf(buffer + strlen(buffer), "%.2f,%.2f ", xs[i], ys[i]);
     }
-    sprintf(buffer, "%s\" />", buffer);
+    sprintf(buffer + strlen(buffer), "\" />" );
 }
 
 
@@ -178,19 +179,19 @@ text_transform(char*      buffer,
 {
     if (clip_id)
     {
-        sprintf(buffer, "%s<text clip-path=\"url(#%s)\" ", buffer, clip_id);
+        sprintf(buffer + strlen(buffer), "<text clip-path=\"url(#%s)\" ", clip_id);
     }else
     {
-        sprintf(buffer, "%s<text ", buffer);
+        sprintf(buffer + strlen(buffer), "<text " );
     }
     if (transform)
     {
-        sprintf(buffer, "%s transform=\"%s\" ", buffer, transform);
+        sprintf(buffer + strlen(buffer), " transform=\"%s\" ", transform);
     }
 
-    sprintf(buffer,
-            "%s x=\"%.2f\" y=\"%.2f\" text-anchor=\"%s\"  font-weight=\"%s\">%s</text>\n",
-            buffer, x, y, txt_align_to_char(anchor), txt_style_to_char(style), txt);
+    sprintf(buffer + strlen(buffer),
+            " x=\"%.2f\" y=\"%.2f\" text-anchor=\"%s\"  font-weight=\"%s\">%s</text>\n",
+            x, y, txt_align_to_char(anchor), txt_style_to_char(style), txt);
 }
 
 void
@@ -237,13 +238,13 @@ circle(char*  buffer,
        char*  clip_id)
 {
 
-    sprintf(buffer, "%s<circle", buffer);
+    sprintf(buffer + strlen(buffer), "<circle" );
     if (clip_id)
     {
-        sprintf(buffer, "%s clip-path=\"url(#%s)\" ",
-                        buffer, clip_id);
+        sprintf(buffer + strlen(buffer), " clip-path=\"url(#%s)\" ",
+                        clip_id);
     }
-    sprintf(buffer, "%s cx=\"%.2f\" cy=\"%.2f\" r=\"%.2f\" fill=\"%s\" />",
-                    buffer, x, y, r, color);
+    sprintf(buffer + strlen(buffer), " cx=\"%.2f\" cy=\"%.2f\" r=\"%.2f\" fill=\"%s\" />",
+                    x, y, r, color);
 
 }
